@@ -3,12 +3,16 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from sqlalchemy.orm.exc import NoResultFound
 from flask_cors import CORS
-from dotenv import dotenv_values
+from dotenv import load_dotenv
+import os
 
-config = dotenv_values(".env")
+# Load environment variables from .env file
+load_dotenv()
 
+# Access the DATABASE_URL environment variable
+database_url = os.getenv("DATABASE_URL")
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = config['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
