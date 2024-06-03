@@ -2,11 +2,16 @@ from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from sqlalchemy.orm.exc import NoResultFound
+from flask_cors import CORS
+from dotenv import dotenv_values
+
+config = dotenv_values(".env")
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:DL9SAY5128@localhost:5432/baby_tracker'
+app.config['SQLALCHEMY_DATABASE_URI'] = config['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+CORS(app)
 
 class Event(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -26,8 +31,9 @@ def format_event(event):
         "Created_at" : event.Created_at
     }
 
-@app.route('/')
+@app.route('/createDB')
 def hello():
+    db.create_all()
     return 'HELLO'
 
 # create an event
